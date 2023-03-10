@@ -14,7 +14,10 @@ The longer I use Window the more reason I got to move to Linux.
 # Features
 
  - It can switch tab.
- - Something about making your (or my) life easier.
+ - Something about making your (or just my) life easier.
+ - Just see the gif. I'm too lazy to explain these stuffs
+ 
+![preview](https://user-images.githubusercontent.com/77918086/224227674-7baa9fc7-a26d-422e-8cd7-8919bd6c8e5c.gif)
  
  
 # How to use
