@@ -1,14 +1,25 @@
 # helix-win-runner
 
-CLI too to run Helix in Window as editor for mostly Godot but might work with others.
-Note that this works through keyboard macros so try not to move around while the script is processing.
+CLI too to run Helix in Window as an editor for mostly Godot but might work with others.
+
+Note that this works through keyboard macros, so try not to move around while the script is processing.
+
 
 # Why not shell scripting?
+
 I've tried, and it sucks.
 The longer I use Window the more reason I got to move to Linux.
 
+
 # Features
- - It runs Helix.
+
+ - It can switch tab.
+ - Something about making your (or my) life easier.
+ 
+ 
+# How to use
+
+I'm lazy. I will write this section if this thing actually gets traction.
 
 
 # Examples
