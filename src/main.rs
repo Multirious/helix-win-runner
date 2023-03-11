@@ -42,6 +42,11 @@ struct Args {
     #[arg(short = 'c', long, value_name = "NUM")]
     column: Option<u32>,
 
+    /// Option to reduce amount of time when writing full file path.
+    /// Only availiable when project path is provided.
+    #[arg(short = 'r', long)]
+    relative: bool,
+
     /// List availiable windows.
     /// Format like so: [<process name>] <window title>
     #[arg(long = "list")]
@@ -85,8 +90,8 @@ fn main() -> Result<()> {
                 sleep(execute_wait);
             }
             focus_window(args.all, &window_title, &window_process_name)?;
-            if let Some(project_path) = args.project_path {
-                keyboard_macro::helix_change_directory(&project_path);
+            if let Some(project_path) = &args.project_path {
+                keyboard_macro::helix_change_directory(project_path);
                 is_change_directory = true;
             }
         }
@@ -100,9 +105,17 @@ fn main() -> Result<()> {
         if is_change_directory {
             sleep(0.1);
         }
+        let file_path = match (args.relative, args.project_path) {
+            (true, Some(project_path)) if file_path[..project_path.len()] == project_path => {
+                // add one to remove the `/`.
+                // It means absolute path with that on
+                &file_path[project_path.len() + 1..]
+            }
+            _ => &file_path[..],
+        };
         let line = args.line.unwrap_or(0) + 1;
         let column = args.column.unwrap_or(0) + 1;
-        keyboard_macro::helix_open_file(&file_path, line, column);
+        keyboard_macro::helix_open_file(file_path, line, column);
     }
 
     Ok(())
