@@ -31,4 +31,4 @@ Godot config:
 | Property   | Value            |
 |----------  |------------------|
 |`exec_path` |`helix-win-runner`|
-|`exec_flags`|`-e "C:\Users\Windows10\Desktop\helix_cmder.bat" -w 3 -t "cmd - hx" -n "ConEmu.exe" -p {project} -f {file}  -l {line} -c {col}`|
+|`exec_flags`|`-r -e "C:\Users\Windows10\Desktop\helix_cmder.bat" -w 3 -t "cmd - hx" -n "ConEmu.exe" -p {project} -f {file}  -l {line} -c {col}`|
