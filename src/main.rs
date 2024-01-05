@@ -1,9 +1,14 @@
+use std::borrow::Cow;
+
 use clap::Parser;
 use helix_win_runner::{
     error::{Error, Result},
     keyboard_macro::{self, sleep},
     window::get_windows,
 };
+
+#[cfg(test)]
+mod test;
 
 /// Program to run Helix from external source.
 #[derive(Parser, Debug)]
@@ -57,6 +62,10 @@ struct Args {
     /// add this flag to include them.
     #[arg(long = "all")]
     all: bool,
+
+    /// Support for using Helix in WSL with application outside WSL
+    #[arg(long)]
+    wsl: bool,
 }
 
 fn main() -> Result<()> {
@@ -91,7 +100,12 @@ fn main() -> Result<()> {
             }
             focus_window(args.all, &window_title, &window_process_name)?;
             if let Some(project_path) = &args.project_path {
-                keyboard_macro::helix_change_directory(project_path);
+                let project_path = if args.wsl {
+                    Cow::Owned(window_path_to_wsl(project_path))
+                } else {
+                    Cow::Borrowed(project_path)
+                };
+                keyboard_macro::helix_change_directory(&project_path);
                 is_change_directory = true;
             }
         }
@@ -113,9 +127,14 @@ fn main() -> Result<()> {
             }
             _ => &file_path[..],
         };
+        let file_path = if args.wsl {
+            Cow::Owned(window_path_to_wsl(file_path))
+        } else {
+            Cow::Borrowed(file_path)
+        };
         let line = args.line.unwrap_or(0) + 1;
         let column = args.column.unwrap_or(0) + 1;
-        keyboard_macro::helix_open_file(file_path, line, column);
+        keyboard_macro::helix_open_file(&file_path, line, column);
     }
 
     Ok(())
@@ -160,4 +179,16 @@ fn focus_window(
 
     attach_thread_input(window.thread_id(), current_thread_id, false)?;
     Ok(())
+}
+
+fn window_path_to_wsl(path: &str) -> String {
+    let path = path.replace("\\", "/");
+    let is_absolute = &path[1..=2] == ":/";
+    if is_absolute {
+        let drive = path.chars().next().unwrap().to_lowercase();
+        let path = &path[3..];
+        format!("/mnt/{}/{}", drive, path)
+    } else {
+        path
+    }
 }
