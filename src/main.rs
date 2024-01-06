@@ -67,6 +67,12 @@ struct Args {
     /// All it do currently is convert Windows path to Linux path
     #[arg(long)]
     wsl: bool,
+
+    /// Use clipboard instead of keyboard macros to speed up the process.
+    /// Assuming Ctrl+V works.
+    /// This will not replace your current clipboard!
+    #[arg(long)]
+    clipboard: bool,
 }
 
 fn main() -> Result<()> {
@@ -106,7 +112,7 @@ fn main() -> Result<()> {
                 } else {
                     Cow::Borrowed(project_path)
                 };
-                keyboard_macro::helix_change_directory(&project_path);
+                keyboard_macro::helix_change_directory(&project_path, args.clipboard);
                 is_change_directory = true;
             }
         }
@@ -135,7 +141,7 @@ fn main() -> Result<()> {
         };
         let line = args.line.unwrap_or(0) + 1;
         let column = args.column.unwrap_or(0) + 1;
-        keyboard_macro::helix_open_file(&file_path, line, column);
+        keyboard_macro::helix_open_file(&file_path, line, column, args.clipboard);
     }
 
     Ok(())

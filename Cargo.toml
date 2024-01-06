@@ -16,7 +16,7 @@ panic = "abort"
 
 [dependencies]
 clap = { version = "4.1.8", features = ["derive"] }
-clipboard-win = "5.0.0"
+clipboard-win = { version = "5.0.0", features = ["std"] }
 enigo = { git = "https://github.com/enigo-rs/enigo", version = "0.0.14" }
 once_cell = "1.17.1"
 thiserror = "1.0.39"
