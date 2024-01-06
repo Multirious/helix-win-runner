@@ -189,7 +189,7 @@ fn focus_window(
 }
 
 fn window_path_to_wsl(path: &str) -> String {
-    let path = path.replace("\\", "/");
+    let path = path.replace('\\', "/");
     let is_absolute = &path[1..=2] == ":/";
     if is_absolute {
         let drive = path.chars().next().unwrap().to_lowercase();

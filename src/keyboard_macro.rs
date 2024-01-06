@@ -1,5 +1,3 @@
-use std::rc::Rc;
-
 use enigo::{Key, KeyboardControllable};
 
 fn enigo() -> std::sync::MutexGuard<'static, enigo::Enigo> {
