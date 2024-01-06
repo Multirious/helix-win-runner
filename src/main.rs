@@ -64,6 +64,7 @@ struct Args {
     all: bool,
 
     /// Support for using Helix in WSL with application outside WSL
+    /// All it do currently is convert Windows path to Linux path
     #[arg(long)]
     wsl: bool,
 }
