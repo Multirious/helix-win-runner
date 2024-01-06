@@ -1,3 +1,6 @@
+![GitHub License](https://img.shields.io/github/license/multirious/helix-win-runner?style=for-the-badge)
+![GitHub Release](https://img.shields.io/github/v/release/multirious/helix-win-runner?sort=semver&style=for-the-badge)
+
 # helix-win-runner
 
 CLI tool to enhance Helix in your prefered terminal as external editor in Windows for mostly Godot but might work with others.
