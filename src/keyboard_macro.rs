@@ -18,34 +18,39 @@ fn quote(e: &mut std::sync::MutexGuard<'static, enigo::Enigo>) {
 pub fn helix_change_directory(directory: &str, clipboard: bool) {
     let mut enigo = enigo();
     enigo.key_click(Key::Escape);
-    enigo.key_sequence(":cd ");
-    quote(&mut enigo);
+    enigo.key_down(Key::Shift);
+    enigo.key_click(Key::Layout(';'));
+    enigo.key_up(Key::Shift);
     if clipboard {
-        paste_restore(&mut enigo, directory);
+        paste_restore(&mut enigo, &format!(r#"cd "{directory}""#));
     } else {
+        enigo.key_sequence("cd ");
+        quote(&mut enigo);
         enigo.key_sequence(directory);
+        quote(&mut enigo);
     }
-    quote(&mut enigo);
     enigo.key_click(Key::Return)
 }
 
 pub fn helix_open_file(file: &str, line: u32, column: u32, clipboard: bool) {
     let mut enigo = enigo();
     enigo.key_click(Key::Escape);
-    enigo.key_sequence(":o ");
-    quote(&mut enigo);
+    enigo.key_down(Key::Shift);
+    enigo.key_click(Key::Layout(';'));
+    enigo.key_up(Key::Shift);
     if clipboard {
-        paste_restore(&mut enigo, file);
+        paste_restore(&mut enigo, &format!(r#"o {file}"#));
     } else {
+        enigo.key_sequence("o ");
+        quote(&mut enigo);
         enigo.key_sequence(file);
+        quote(&mut enigo);
     }
-    quote(&mut enigo);
     enigo.key_click(Key::Return);
     enigo.key_sequence(&format!("{line}gg")[..]);
     if column > 1 {
         enigo.key_sequence(&format!("{column}l")[..]);
     }
-    enigo.key_click(Key::Return)
 }
 
 pub fn sleep(secs: f64) {
@@ -59,12 +64,12 @@ pub fn paste_restore(enigo: &mut enigo::Enigo, msg: &str) {
         clipboard_win::set(clipboard_win::formats::Unicode, msg).expect("To set clipboard")
     })
     .expect("To open clipboard");
-    sleep(0.1);
+    sleep(0.05);
     enigo.key_down(Key::Control);
     enigo.key_down(Key::Layout('v'));
     enigo.key_up(Key::Layout('v'));
     enigo.key_up(Key::Control);
-    sleep(0.1);
+    sleep(0.05);
     if let Some(store) = clipboard_store.take() {
         clipboard_win::with_clipboard_attempts(10, move || {
             store.restore().expect("To set clipboard")

@@ -120,7 +120,7 @@ fn main() -> Result<()> {
         _ => {}
     }
 
-    sleep(0.3);
+    sleep(0.1);
 
     if let Some(file_path) = args.file_path {
         if is_change_directory {
