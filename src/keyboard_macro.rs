@@ -17,6 +17,7 @@ fn quote(e: &mut std::sync::MutexGuard<'static, enigo::Enigo>) {
 
 pub fn helix_change_directory(directory: &str, clipboard: bool) {
     let mut enigo = enigo();
+    enigo.key_click(Key::Escape);
     enigo.key_sequence(":cd ");
     quote(&mut enigo);
     if clipboard {
@@ -30,6 +31,7 @@ pub fn helix_change_directory(directory: &str, clipboard: bool) {
 
 pub fn helix_open_file(file: &str, line: u32, column: u32, clipboard: bool) {
     let mut enigo = enigo();
+    enigo.key_click(Key::Escape);
     enigo.key_sequence(":o ");
     quote(&mut enigo);
     if clipboard {
