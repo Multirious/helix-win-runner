@@ -18,9 +18,10 @@ This tool is currently made as a workaround for it.
 
 - File switching
 - Focuses Helix window that already exists or create one if not.
+- Jump to errors and warnings
 - Supports using Helix in WSL.
  
-![preview](https://github.com/Multirious/helix-win-runner/assets/77918086/3a5396ca-5a1d-40f2-900d-9557769f67b9)
+![demo](https://github-production-user-asset-6210df.s3.amazonaws.com/77918086/295451165-24059abe-350c-41a1-a617-7a1e1391e806.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240110%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240110T044835Z&X-Amz-Expires=300&X-Amz-Signature=24455f8f2ac93a467edd19051b3acfb74fc59bb490ede68028343062e2fa0f52&X-Amz-SignedHeaders=host&actor_id=77918086&key_id=0&repo_id=612031113)
 
 You can issue a feature request!
 
