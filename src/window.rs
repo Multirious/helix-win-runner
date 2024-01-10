@@ -175,7 +175,7 @@ impl Window {
             SWP_SHOWWINDOW | SWP_NOSIZE | SWP_NOMOVE,
         )?;
         self.set_foreground();
-        // self.set_focus()?;
+        self.set_focus()?;
         self.set_active()?;
         Ok(())
     }
