@@ -14,13 +14,17 @@ mod test;
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
-    /// Command to execute when no window found.
+    /// [DEPRECATED] Command to execute when no window found.
     /// If not provided, only search will be done.
+    ///
+    /// DEPRECATED: use `run` flag.
     #[arg(short = 'e', long, value_name = "PATH")]
     execute_path: Option<String>,
 
-    /// Time to wait after executing `execute_path`.
+    /// [DEPRECATED] Time to wait after executing `execute_path`.
     /// Does nothing if not execute.
+    ///
+    /// DEPRECATED: use `run_wait` flag.
     #[arg(short = 'w', long, value_name = "SECS")]
     execute_wait: Option<f64>,
 
@@ -73,6 +77,21 @@ struct Args {
     /// This will not replace your current clipboard!
     #[arg(long)]
     clipboard: bool,
+
+    /// Use no macro when a command is ran
+    #[arg(long)]
+    no_init_macro: bool,
+
+    /// Command to run when no window is found.
+    /// If not provided, only search will be done.
+    #[arg(long = "run", value_name = "CMD")]
+    run_command: Option<Vec<String>>,
+
+    /// After running a command, wait for a bit before running a macro.
+    ///
+    /// `no-launch-macro` flag disable this entirely
+    #[arg(long = "run-wait", value_name = "SECS")]
+    run_command_and_wait: Option<f64>,
 }
 
 fn main() -> Result<()> {
@@ -99,13 +118,19 @@ fn main() -> Result<()> {
 
     let res = focus_window(args.all, &window_title, &window_process_name);
     let mut is_change_directory = false;
-    match (res, args.execute_path) {
-        (Err(Error::WindowNotFound), Some(path)) => {
-            execute_path(path)?;
-            if let Some(execute_wait) = args.execute_wait {
-                sleep(execute_wait);
+    let run_command_args = args
+        .run_command
+        .or_else(|| args.execute_path.map(|p| vec![p]));
+    match (res, run_command_args) {
+        (Err(Error::WindowNotFound), Some(run_command_args)) => {
+            run_command(run_command_args)?;
+            if let Some(wait) = args.run_command_and_wait.or(args.execute_wait) {
+                sleep(wait);
             }
             focus_window(args.all, &window_title, &window_process_name)?;
+            if args.no_init_macro {
+                return Ok(());
+            }
             if let Some(project_path) = &args.project_path {
                 let project_path = if args.wsl {
                     Cow::Owned(window_path_to_wsl(project_path))
@@ -147,9 +172,9 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn execute_path<P: AsRef<std::path::Path>>(path: P) -> Result<()> {
+fn run_command(args: Vec<String>) -> Result<()> {
     use std::process::Command;
-    Command::new("cmd").arg("/C").arg(path.as_ref()).spawn()?;
+    Command::new("cmd").arg("/C").args(args).spawn()?;
     Ok(())
 }
 
